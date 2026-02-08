@@ -1,0 +1,400 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+:root {
+  --background: #000000;
+  --text-light: #f0f0f0;
+  --text-dark: #a0a0a0;
+  --accent: #4a90e2;
+  --accent-dark: #3a7bc8;
+  --capture-glow-color: #e24a4a;
+  --highlight-selected: rgba(245, 166, 35, 0.7);
+  --modal-bg: rgba(42, 42, 42, 0.98);
+  --modal-border: #555;
+  --input-bg: #2a2a2a;
+  --button-bg: #333;
+  --button-hover-bg: #444;
+  --font-family: 'Space Mono', monospace;
+  --error-red: #c84a4a;
+
+  /* GDM Theme Colors */
+  --gdm-bg-color: #000000;
+  --gdm-light-square: #3D3D3D;
+  --gdm-dark-square: #2A2A2A;
+  --gdm-glow-color: #00aaff;
+  --gdm-white-piece-glow: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--gdm-bg-color);
+  color: var(--text-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100dvh;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--gdm-bg-color);
+  transition: background-color 0.3s ease;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  color: var(--text-light);
+  font-size: 24px;
+}
+
+.icon-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.icon-btn:disabled {
+  color: #555;
+  cursor: not-allowed;
+  background-color: transparent;
+}
+
+.game-container {
+  flex-grow: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 3rem 1rem 1rem 1rem;
+  min-height: 0;
+}
+
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-shrink: 0;
+  position: relative;
+  padding-top: 48px;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(200, 74, 74, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(200, 74, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(200, 74, 74, 0); }
+}
+
+.error-message {
+  text-align: center;
+  color: var(--error-red);
+}
+
+.error-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: var(--error-red);
+  padding: 2rem;
+  text-align: center;
+}
+
+.square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  transition: box-shadow 0.1s ease-out;
+}
+
+.piece-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Let clicks pass through to squares */
+  z-index: 3;
+}
+
+.chess-piece {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12.5%; /* 100% / 8 squares */
+  height: 12.5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  line-height: 1;
+  user-select: none;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), text-shadow 0.3s ease;
+  will-change: transform;
+}
+
+
+/* --- GDM CHESSBOARD STYLES --- */
+.board-container {
+    width: clamp(320px, 85vmin, 750px);
+    height: clamp(320px, 85vmin, 750px);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chessboard {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 100%;
+  height: 100%;
+  position: relative;
+  box-shadow: 0 0 15px 3px rgba(0, 170, 255, 0.4);
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+}
+
+/* The grid is a pseudo-element to ensure it's layered below the piece's glow */
+.square::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 0 1px rgba(0, 170, 255, 0.25);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.square.light {
+  background-color: var(--gdm-light-square);
+}
+
+.square.dark {
+  background-color: var(--gdm-dark-square);
+}
+
+/* Elevate the active piece to allow its glow to render over adjacent squares */
+.chess-piece.talking,
+.chess-piece.selected-piece { /* A new class to apply when piece is selected */
+  z-index: 6;
+}
+
+/* Permanent coordinates for GDM board */
+.square-notation {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  color: var(--gdm-glow-color);
+  text-shadow: 0 0 2px var(--gdm-glow-color);
+  font-size: clamp(10px, 1.5vmin, 14px);
+  text-transform: uppercase;
+  z-index: 10;
+  font-weight: bold;
+  pointer-events: none;
+  opacity: 0.7; /* Make permanently visible */
+  transition: opacity 0.2s ease-in-out;
+}
+
+.chess-piece {
+  font-size: clamp(32px, 9vmin, 72px);
+}
+
+.chess-piece.white {
+  color: var(--gdm-white-piece-glow);
+  text-shadow: 0 0 10px var(--gdm-glow-color), 0 0 15px var(--gdm-glow-color), 0 0 20px var(--gdm-glow-color);
+}
+
+.chess-piece.black {
+  color: #111;
+  /* Rim light effect */
+  text-shadow: 
+    0 0 8px var(--gdm-glow-color),
+    1px 1px 1px transparent, 
+    -1px -1px 1px transparent;
+}
+
+/* Selected square indicator for GDM theme */
+.square.selected::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 0 2px #0088CC;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* --- USER TALK GLOW --- */
+.user-talk-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 5;
+  transition: box-shadow 0.05s linear;
+}
+
+/* --- ANIMATED ORB GLOW --- */
+.animated-orb-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: radial-gradient(circle, var(--accent) 15%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2; /* Layer between board grid and piece */
+  /* This centers the element on its transformed coordinates */
+  transform: translate(-50%, -50%);
+  /* The smooth motion magic! */
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, width 0.2s ease, height 0.2s ease;
+}
+
+/* --- PIECE CARD PLACEHOLDER STYLES --- */
+.piece-card-placeholder {
+  width: 320px;
+  height: clamp(320px, 75vmin, 700px);
+  flex-shrink: 0;
+  border: 2px dashed #444; /* Subtle frame */
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-dark);
+  transition: all 0.2s ease-in-out;
+}
+
+.placeholder-content .material-symbols-outlined {
+  font-size: 48px;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.placeholder-content p {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* --- RESPONSIVE / MOBILE STYLES --- */
+/* MOBILE PORTRAIT: Stacked layout */
+@media (max-width: 850px) and (orientation: portrait) {
+    .header-actions {
+        display: none;
+    }
+    .game-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1rem;
+        overflow-y: auto; /* Allow scrolling for card content */
+    }
+    .left-panel {
+        order: 2;
+        width: 100%;
+        max-width: 400px;
+        gap: 0;
+        align-items: center;
+        padding-top: 0;
+    }
+    .piece-card, .piece-card-placeholder {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        min-height: 250px;
+    }
+    .board-container, .chessboard {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        order: 1;
+        flex-shrink: 0; /* Prevent board from shrinking */
+    }
+    .board-container {
+        height: 100vw;
+        max-height: 400px;
+    }
+    .App {
+        padding: 0.5rem;
+    }
+}
+
+/* MOBILE LANDSCAPE: Side-by-side layout */
+@media (max-height: 550px) and (orientation: landscape) {
+    .game-container {
+        flex-direction: row;
+        gap: 1.5rem;
+        padding: 1rem;
+        overflow: hidden;
+        height: 100%;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    .left-panel {
+        order: 1;
+        width: 320px;
+        height: calc(100dvh - 2rem);
+        max-height: 500px;
+    }
+    .piece-card, .piece-card-placeholder {
+        width: 100%;
+        flex-grow: 1;
+        min-height: 0;
+    }
+    .board-container, .chessboard {
+        order: 2;
+        width: auto;
+        height: calc(100dvh - 2rem);
+        max-width: none;
+        max-height: 500px;
+        aspect-ratio: 1/1;
+    }
+}

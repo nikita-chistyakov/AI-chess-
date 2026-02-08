@@ -1,0 +1,7 @@
+{
+  "name": "AI Chess Chat",
+  "description": "Chat with your chess pieces about strategy (or just banter).",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

@@ -1,3 +1,4 @@
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -10,7 +11,7 @@ import { PieceInstance, ImageTransform } from '../types';
 const pieceTypeMap: Record<string, string> = { p: "Pawn", n: "Knight", b: "Bishop", r: "Rook", q: "Queen", k: "King" };
 
 export function usePieceCustomization() {
-  const [imagePromptTemplate, setImagePromptTemplate] = useState('Fantasy art of a {color} chess {type} piece, named {name}. Description of the piece: {description}. Voice/speaking style: {voicePrompt}. The style should be epic, detailed, with dramatic lighting. The drawn character is the chess piece itself (don\'t draw a human character). Avoid text. Square ratio.');
+  const [imagePromptTemplate, setImagePromptTemplate] = useState('Russian folklore book illustration of a {color} chess {type} piece, named {name}. Character description: {description}. Style: Ivan Bilibin, intricate patterns, fairy tale art, bold outlines, flat colors. The character is the chess piece itself. Square ratio.');
   
   const [pieceImageUrls, setPieceImageUrls] = useState<Record<string, string>>({});
   const [pieceImageTransforms, setPieceImageTransforms] = useState<Record<string, ImageTransform>>({});

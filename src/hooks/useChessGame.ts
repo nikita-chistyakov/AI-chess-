@@ -107,10 +107,10 @@ export function useChessGame({
         const newInstances = { ...prevInstances };
         if (move.promotion) {
           const promotionPersonalities: Record<string, Omit<PiecePersonality, 'names'>> = {
-            q: { description: "Newly crowned and immensely powerful, I am a force of pure ambition, ready to dominate the board and secure victory at any cost.", voice: "Kore", voicePrompt: "Speak with a commanding and regal tone." },
-            r: { description: "I have become a tower of strength, a solid and unbreakable force. My path is clear, my purpose renewed.", voice: "Orus", voicePrompt: "Speak with a deep, solid voice." },
-            b: { description: "My vision has expanded, seeing the board in a new light. I weave new, more complex strategies from my elevated position.", voice: "Charon", voicePrompt: "Speak with a wise and knowing tone." },
-            n: { description: "I have leaped into a new role, more cunning and unpredictable than ever before. My unorthodox approach is now backed by greater purpose.", voice: "Fenrir", voicePrompt: "Speak with a wild, unpredictable edge." },
+            q: { description: "I have ascended to become a Tsarevna, a ruler of magic and wisdom. My power flows through the board like a great river.", voice: "Kore", voicePrompt: "Speak with regal, magical authority." },
+            r: { description: "I am now a Bogatyr of legend, immovable and mighty. My strength is the foundation of our victory.", voice: "Orus", voicePrompt: "Speak with deep, booming strength." },
+            b: { description: "I have become the Grey Wolf, swift and cunning. I see the hidden paths and strike from the shadows.", voice: "Charon", voicePrompt: "Speak with a low, cunning tone." },
+            n: { description: "I am reborn as the Firebird, blazing with light and glory. My movements dazzle the enemy.", voice: "Fenrir", voicePrompt: "Speak with a bright, energetic tone." },
           };
           const { color, type } = playerMoveGame.get(move.to)!;
           const id = `${color}_${type}_${move.from}_promo`;
